@@ -14,7 +14,7 @@ Really though, you could just as easily implement the controller on an arduino o
 	 
    | Fan PWM value | Fan PWM value | Fan PWM value |
 	 
-   Send each PWM value sequentially, starting from zero and going to 16.
+   Send each PWM value sequentially, starting from zero and going to 16. Essentially, a big shift register.
 
 
 ## YOU MUST SET THE SERIAL PORT BAUDRATE BEFORE USING THIS MODULE
