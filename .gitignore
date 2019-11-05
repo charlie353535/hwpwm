@@ -1,1 +1,5 @@
 *.cmd
+.tempversions
+*.mod.c
+*.mod.o
+*.ko
