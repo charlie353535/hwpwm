@@ -3,3 +3,4 @@
 *.mod.c
 *.mod.o
 *.ko
+*.o
