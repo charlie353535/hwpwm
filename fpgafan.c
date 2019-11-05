@@ -12,7 +12,7 @@
 #include <linux/of_device.h>
 #include <linux/sysfs.h>
 
-#include "sysfs.h"
+#include <include/sysfs.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Charlie Camilleri");
@@ -60,7 +60,7 @@ void sendfan(void) {
  }
 }
 
-const char *CDEV_MSG "fpgafan Copyright Charlie Camilleri 2019 \n" \
+const char *CDEV_MSG="fpgafan Copyright Charlie Camilleri 2019 \n" \
                      "This device is useless, but required for the module to work!\n";
 
 int ind = 0;

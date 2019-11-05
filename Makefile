@@ -1,6 +1,6 @@
 obj-m := fpgafan12.o
 fpgafan12-objs := fpgafan.o sysfs.o
-ccflags-y := --std=gnu99 -Wno-declaration-after-statement
+ccflags-y := --std=gnu99 -Wno-declaration-after-statement -I$(PWD) -DYEETTTTTTTTTTTTTTT
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
