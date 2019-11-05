@@ -4,7 +4,7 @@ ccflags-y := --std=gnu99 -Wno-declaration-after-statement -I$(PWD) -DYEETTTTTTTT
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
-	make unload
+	-make unload
 	make load
 
 compile:
