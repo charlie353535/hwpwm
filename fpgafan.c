@@ -1,3 +1,20 @@
+/*
+This file is part of FPGAFAN.
+
+FPGAFAN is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+FPGAFAN is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with FPGAFAN.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include <linux/kernel.h>
 #include <linux/init.h>
 #include <linux/module.h>
@@ -60,8 +77,22 @@ void sendfan(void) {
  }
 }
 
-const char *CDEV_MSG="fpgafan Copyright Charlie Camilleri 2019 \n" \
-                     "This device is useless, but required for the module to work!\n";
+const char *CDEV_MSG =	"fpgafan Copyright Charlie Camilleri 2019 \n" \
+			" --> This device is useless, but required for the module to work! <--\n" \
+			"\n" \
+			"FPGAFAN is free software: you can redistribute it and/or modify\n" \
+			"it under the terms of the GNU General Public License as published by\n" \
+			"the Free Software Foundation, either version 3 of the License, or\n" \
+			"(at your option) any later version.\n" \
+			"\n" \
+			"FPGAFAN is distributed in the hope that it will be useful, \n" \
+			"but WITHOUT ANY WARRANTY; without even the implied warranty of \n" \
+			"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the \n" \
+			"GNU General Public License for more details. \n" \
+			"\n" \
+			"You should have received a copy of the GNU General Public License \n" \
+			"along with FPGAFAN.  If not, see <https://www.gnu.org/licenses/>. \n" \
+			"\n";
 
 int ind = 0;
 static ssize_t dev_read(struct file *filep, char *buf, size_t len, loff_t *offset){
