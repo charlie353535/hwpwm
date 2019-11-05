@@ -1,1 +1,0 @@
-cmd_/home/charlie/fancontrol_fpga/fpgafan12.o := ld -m elf_x86_64  -z max-page-size=0x200000    -r -o /home/charlie/fancontrol_fpga/fpgafan12.o /home/charlie/fancontrol_fpga/fpgafan.o /home/charlie/fancontrol_fpga/sysfs.o 
