@@ -31,6 +31,8 @@ typedef struct file FILE;
 #define DEVICE_NAME "fpgafan0"
 #define CLASS_NAME  "fpgafan"
 
+#define PROTOCOL 2 // Protocol to use
+
 unsigned char *fanbuf;
 EXPORT_SYMBOL(fanbuf);
 static FILE* filp;
@@ -48,12 +50,19 @@ static void sendb(unsigned char b) {
 
 void sendfan(void) {
  for (unsigned char i=0; i<FAN_COUNT; i++) {
-  sendb(i);
-  sendb(fanbuf[i]);
+  if (PROTOCOL == 1) {
+   sendb(fanbuf[i]);
+  }
+  if (PROTOCOL == 2) {
+   sendb(i);
+   sendb(fanbuf[i]);
+  }
  }
 }
 
-#define CDEV_MSG "fpgafan Copyright Charlie Camilleri 2019 \nThis device is useless, but required for the module to work!\n"
+const char *CDEV_MSG "fpgafan Copyright Charlie Camilleri 2019 \n" \
+                     "This device is useless, but required for the module to work!\n";
+
 int ind = 0;
 static ssize_t dev_read(struct file *filep, char *buf, size_t len, loff_t *offset){
    if (ind==1) {
