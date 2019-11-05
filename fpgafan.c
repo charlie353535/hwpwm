@@ -67,10 +67,10 @@ static void sendb(unsigned char b) {
 
 void sendfan(void) {
  for (unsigned char i=0; i<FAN_COUNT; i++) {
-  if (PROTOCOL == 1) {
+  if (PROTOCOL == 2) {
    sendb(fanbuf[i]);
   }
-  if (PROTOCOL == 2) {
+  if (PROTOCOL == 1) {
    sendb(i);
    sendb(fanbuf[i]);
   }
