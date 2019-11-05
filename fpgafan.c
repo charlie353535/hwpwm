@@ -12,6 +12,8 @@
 #include <linux/of_device.h>
 #include <linux/sysfs.h>
 
+#include "sysfs.h"
+
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Charlie Camilleri");
 MODULE_DESCRIPTION("Driver for FPGA PWM controller (ttySX) ");
@@ -29,7 +31,7 @@ typedef struct file FILE;
 #define DEVICE_NAME "fpgafan0"
 #define CLASS_NAME  "fpgafan"
 
-static unsigned char *fanbuf;
+unsigned char *fanbuf;
 EXPORT_SYMBOL(fanbuf);
 static FILE* filp;
 
@@ -47,7 +49,7 @@ static void sendb(unsigned char b) {
  kfree((void*)buf);
 }
 
-static void sendfan(void) {
+void sendfan(void) {
  for (unsigned char i=0; i<FAN_COUNT; i++) {
   sendb(i);
   sendb(fanbuf[i]);
@@ -60,7 +62,7 @@ static struct file_operations fops =
 };
 
 
-EXPORT_SYMBOL_GPL(sendfan);
+EXPORT_SYMBOL(sendfan);
 
 static struct device *fdevice;
 static struct class *dclass;
@@ -103,11 +105,15 @@ static int __init fpgafan_init(void){
   return PTR_ERR(fdevice);
  }
 
+ createattrs(fdevice);
+
  return 0;
 }
 
 static void __exit fpgafan_exit(void){
  printk(KERN_INFO "Unloading FPGAFAN\n");
+
+ delattrs(fdevice);
 
  device_destroy(dclass, MKDEV(major, 0));     // remove the device
  class_unregister(dclass);                          // unregister the device class

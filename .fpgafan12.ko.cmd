@@ -1,0 +1,1 @@
+cmd_/home/charlie/fancontrol_fpga/fpgafan12.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000 -T ./scripts/module-common.lds  --build-id  -o /home/charlie/fancontrol_fpga/fpgafan12.ko /home/charlie/fancontrol_fpga/fpgafan12.o /home/charlie/fancontrol_fpga/fpgafan12.mod.o ;  true

@@ -13,11 +13,6 @@
 #include <linux/of_device.h>
 #include <linux/sysfs.h>
 
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Charlie Camilleri");
-MODULE_DESCRIPTION("Driver for FPGA PWM controller (ttySX) ");
-MODULE_VERSION("12");
-
 //#include "../GPL3.h"
 
 typedef struct file FILE;
