@@ -14,7 +14,7 @@ clean:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
 
 load:
-	insmod fpgafan12.ko
+	insmod fpgafan12.ko PORT="/dev/ttyV0"
 
 unload:
 	rmmod fpgafan12

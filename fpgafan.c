@@ -19,9 +19,9 @@ MODULE_AUTHOR("Charlie Camilleri");
 MODULE_DESCRIPTION("Driver for FPGA PWM controller (ttySX) ");
 MODULE_VERSION("12");
 
-static char *PORT = "/dev/ttyV0";
+static char *PORT = "NOTTY";
 module_param(PORT, charp, S_IRUGO);
-MODULE_PARM_DESC(PORT, "Serial port to use");
+MODULE_PARM_DESC(PORT, "Serial port to use (e.g. /dev/ttyS0) ");
 
 typedef struct file FILE;
 
@@ -34,9 +34,6 @@ typedef struct file FILE;
 unsigned char *fanbuf;
 EXPORT_SYMBOL(fanbuf);
 static FILE* filp;
-
-ssize_t kernel_write(struct file *file, const void *buf, size_t count,
-            loff_t *pos);
 
 static void sendb(unsigned char b) {
  loff_t pos = 0;
@@ -56,9 +53,29 @@ void sendfan(void) {
  }
 }
 
+#define CDEV_MSG "fpgafan Copyright Charlie Camilleri 2019 \nThis device is useless, but required for the module to work!\n"
+int ind = 0;
+static ssize_t dev_read(struct file *filep, char *buf, size_t len, loff_t *offset){
+   if (ind==1) {
+    ind=0;
+    return 0;
+   }
+
+   int err = 0;
+   err = copy_to_user(buf, CDEV_MSG, strlen(CDEV_MSG));
+
+   if (err>0) {
+      printk(KERN_INFO "FPGAFAN: failed to send data to /dev/fpgafan0\n");
+      return -EFAULT;
+   }
+
+   ind++;
+   return (strlen(CDEV_MSG));
+}
+
 static struct file_operations fops =
 {
-   .open = NULL,
+ .read = dev_read,
 };
 
 
@@ -70,12 +87,18 @@ static int major;
 
 static int __init fpgafan_init(void){
  printk(KERN_INFO "fpgafan Copyright Charlie Camilleri 2019\n");
+
+ if (!strcmp(PORT,"NOTTY")) {
+  printk(KERN_ALERT "FPGAFAN: Please specify the PORT parameter\n");
+  return -EINVAL;
+ }
+
  fanbuf = (unsigned char*)kmalloc(FAN_COUNT, GFP_KERNEL);
 
  filp = filp_open(PORT, O_RDWR, 0);
  if (IS_ERR(filp)) {
   printk(KERN_ERR "FPGAFAN: Error opening %s!\n",PORT);
-  return -1;
+  return -ENODEV;
  }
 
  for (int i=0; i<FAN_COUNT; i++) {
@@ -115,9 +138,9 @@ static void __exit fpgafan_exit(void){
 
  delattrs(fdevice);
 
- device_destroy(dclass, MKDEV(major, 0));     // remove the device
- class_unregister(dclass);                          // unregister the device class
- class_destroy(dclass);                             // remove the device class
+ device_destroy(dclass, MKDEV(major, 0));
+ class_unregister(dclass);
+ class_destroy(dclass);
  unregister_chrdev(major, DEVICE_NAME);
 
  filp_close(filp, NULL);
