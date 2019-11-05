@@ -1,0 +1,2 @@
+0x00000000	sendfan	/home/charlie/fancontrol_fpga/fpgafan	EXPORT_SYMBOL_GPL
+0x00000000	fanbuf	/home/charlie/fancontrol_fpga/fpgafan	EXPORT_SYMBOL

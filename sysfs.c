@@ -1,3 +1,4 @@
+#define __NO_VERSION__
 #include <linux/kernel.h>
 #include <linux/init.h>
 #include <linux/module.h>
@@ -12,7 +13,12 @@
 #include <linux/of_device.h>
 #include <linux/sysfs.h>
 
-#include "../GPL3.h"
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Charlie Camilleri");
+MODULE_DESCRIPTION("Driver for FPGA PWM controller (ttySX) ");
+MODULE_VERSION("12");
+
+//#include "../GPL3.h"
 
 typedef struct file FILE;
 
@@ -48,12 +54,6 @@ static ssize_t pwm_store(struct device *dev, struct device_attribute *attr, cons
  return PAGE_SIZE;
 }
 
-static ssize_t show_license(struct device *dev, struct device_attribute *attr, char *buf)
-{
- sprintf(buf,"%s\n",GPL3);
- return strlen(buf);
-}
-
 #define FPERM 0644 // sysfs file perm
 
 static const DEVICE_ATTR(pwm1,		FPERM       ,	    pwm_show               , pwm_store);
@@ -72,8 +72,6 @@ static const DEVICE_ATTR(pwm13,         FPERM       ,       pwm_show            
 static const DEVICE_ATTR(pwm14,         FPERM       ,       pwm_show               , pwm_store);
 static const DEVICE_ATTR(pwm15,         FPERM       ,       pwm_show               , pwm_store);
 static const DEVICE_ATTR(pwm16,         FPERM       ,       pwm_show               , pwm_store);
-
-static const DEVICE_ATTR(LICENSE,	0444        ,       show_license           , NULL);
 
 int createattrs(struct device* pdev) {
  printk(KERN_INFO "Populating SYSFS\n");
@@ -95,8 +93,6 @@ int createattrs(struct device* pdev) {
  device_create_file(pdev, &dev_attr_pwm15);
  device_create_file(pdev, &dev_attr_pwm16);
 
- device_create_file(pdev, &dev_attr_LICENSE);
-
  return 0;
 }
 
@@ -117,8 +113,6 @@ int delattrs(struct device* pdev) {
  device_remove_file(pdev, &dev_attr_pwm14);
  device_remove_file(pdev, &dev_attr_pwm15);
  device_remove_file(pdev, &dev_attr_pwm16);
-
- device_remove_file(pdev, &dev_attr_LICENSE);
 
  return 0;
 }
