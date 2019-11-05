@@ -7,3 +7,4 @@
 *.o
 Module.symvers
 modules.order
+signing
