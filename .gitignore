@@ -2,6 +2,7 @@
 .tempversions
 *.mod.c
 *.mod.o
+*.mod
 *.ko
 *.o
 Module.symvers
