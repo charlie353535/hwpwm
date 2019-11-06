@@ -31,6 +31,7 @@ along with FPGAFAN.  If not, see <https://www.gnu.org/licenses/>.
 #include <linux/of_device.h>
 #include <linux/sysfs.h>
 
+#include <include/io.h>
 //#include "../GPL3.h"
 
 typedef struct file FILE;
@@ -40,6 +41,7 @@ extern void sendfan(void);
 
 // extern variables
 extern unsigned char* fanbuf;
+extern unsigned char* GPIO;
 
 static ssize_t pwm_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
@@ -60,9 +62,30 @@ static ssize_t pwm_store(struct device *dev, struct device_attribute *attr, cons
  int tmp;
  sscanf(buf, "%d", &tmp);
  if (tmp > 0xFF) { return PAGE_SIZE; }
- printk(KERN_INFO "PWM1 set to %d\n",tmp);
+ printk(KERN_INFO "PWM%d set to %d\n",id,tmp);
  fanbuf[id-1] = 0;
  fanbuf[id-1] += tmp;
+ sendfan();
+ return PAGE_SIZE;
+}
+
+static ssize_t gpio_show(struct device *dev, struct device_attribute *attr, char *buf)
+{
+ sprintf(buf,"0\n");
+ return strlen(buf);
+}
+
+static ssize_t pwm_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+ int id = 0;
+ struct attribute* att = &attr->attr;
+ sscanf(att->name, "pwm%d", &id);
+
+ int tmp;
+ sscanf(buf, "%d", &tmp);
+
+ printk(KERN_INFO "GPIO%d set to %d\n",id,tmp);
+ setpin(id,tmp)
  sendfan();
  return PAGE_SIZE;
 }
