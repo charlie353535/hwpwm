@@ -68,6 +68,7 @@ void sendfan(void) {
   }
  }
 }
+//EXPORT_SYMBOL(sendfan);
 
 void setreg(unsigned char reg, unsigned char val) {
  sendb(reg); sendb(val);
@@ -108,7 +109,7 @@ void analogWrite(int pin, unsigned char value) {
  fanbuf[pin-1] = value;
 }
 
-char DEVNAME[9];
+char DEVNAME[9] = "fpgafan0";
 unsigned char RDONLYP = 0;
 
 unsigned char regs[256];

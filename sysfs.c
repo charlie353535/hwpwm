@@ -38,6 +38,7 @@ typedef struct file FILE;
 
 // extern funcs
 extern void sendfan(void);
+//extern void setpin(int id, int val);
 
 // extern variables
 extern unsigned char* fanbuf;
@@ -75,7 +76,7 @@ static ssize_t gpio_show(struct device *dev, struct device_attribute *attr, char
  return strlen(buf);
 }
 
-static ssize_t pwm_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+static ssize_t gpio_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
  int id = 0;
  struct attribute* att = &attr->attr;
@@ -85,8 +86,7 @@ static ssize_t pwm_store(struct device *dev, struct device_attribute *attr, cons
  sscanf(buf, "%d", &tmp);
 
  printk(KERN_INFO "GPIO%d set to %d\n",id,tmp);
- setpin(id,tmp)
- sendfan();
+ setpin(id,tmp);
  return PAGE_SIZE;
 }
 
@@ -109,6 +109,24 @@ static const DEVICE_ATTR(pwm14,         FPERM       ,       pwm_show            
 static const DEVICE_ATTR(pwm15,         FPERM       ,       pwm_show               , pwm_store);
 static const DEVICE_ATTR(pwm16,         FPERM       ,       pwm_show               , pwm_store);
 
+static const DEVICE_ATTR(gpio0,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio1,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio2,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio3,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio4,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio5,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio6,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio7,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio8,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio9,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio10,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio11,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio12,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio13,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio14,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio15,         FPERM       ,       gpio_show               , gpio_store);
+
+
 int createattrs(struct device* pdev) {
  printk(KERN_INFO "Populating SYSFS\n");
 
@@ -128,6 +146,24 @@ int createattrs(struct device* pdev) {
  device_create_file(pdev, &dev_attr_pwm14);
  device_create_file(pdev, &dev_attr_pwm15);
  device_create_file(pdev, &dev_attr_pwm16);
+
+ device_create_file(pdev, &dev_attr_gpio0);
+ device_create_file(pdev, &dev_attr_gpio1);
+ device_create_file(pdev, &dev_attr_gpio2);
+ device_create_file(pdev, &dev_attr_gpio3);
+ device_create_file(pdev, &dev_attr_gpio4);
+ device_create_file(pdev, &dev_attr_gpio5);
+ device_create_file(pdev, &dev_attr_gpio6);
+ device_create_file(pdev, &dev_attr_gpio7);
+ device_create_file(pdev, &dev_attr_gpio8);
+ device_create_file(pdev, &dev_attr_gpio9);
+ device_create_file(pdev, &dev_attr_gpio10);
+ device_create_file(pdev, &dev_attr_gpio11);
+ device_create_file(pdev, &dev_attr_gpio12);
+ device_create_file(pdev, &dev_attr_gpio13);
+ device_create_file(pdev, &dev_attr_gpio14);
+ device_create_file(pdev, &dev_attr_gpio15);
+
 
  return 0;
 }
@@ -149,6 +185,23 @@ int delattrs(struct device* pdev) {
  device_remove_file(pdev, &dev_attr_pwm14);
  device_remove_file(pdev, &dev_attr_pwm15);
  device_remove_file(pdev, &dev_attr_pwm16);
+
+ device_remove_file(pdev, &dev_attr_gpio0);
+ device_remove_file(pdev, &dev_attr_gpio1);
+ device_remove_file(pdev, &dev_attr_gpio2);
+ device_remove_file(pdev, &dev_attr_gpio3);
+ device_remove_file(pdev, &dev_attr_gpio4);
+ device_remove_file(pdev, &dev_attr_gpio5);
+ device_remove_file(pdev, &dev_attr_gpio6);
+ device_remove_file(pdev, &dev_attr_gpio7);
+ device_remove_file(pdev, &dev_attr_gpio8);
+ device_remove_file(pdev, &dev_attr_gpio9);
+ device_remove_file(pdev, &dev_attr_gpio10);
+ device_remove_file(pdev, &dev_attr_gpio11);
+ device_remove_file(pdev, &dev_attr_gpio12);
+ device_remove_file(pdev, &dev_attr_gpio13);
+ device_remove_file(pdev, &dev_attr_gpio14);
+ device_remove_file(pdev, &dev_attr_gpio15);
 
  return 0;
 }
