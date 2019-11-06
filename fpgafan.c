@@ -30,11 +30,12 @@ along with FPGAFAN.  If not, see <https://www.gnu.org/licenses/>.
 #include <linux/sysfs.h>
 
 #include <include/sysfs.h>
+#include <include/io.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Charlie Camilleri");
 MODULE_DESCRIPTION("Driver for FPGA PWM controller (ttySX) ");
-MODULE_VERSION("12");
+MODULE_VERSION("12.1");
 
 static char *PORT = "NOTTY";
 module_param(PORT, charp, S_IRUGO);
@@ -42,18 +43,19 @@ MODULE_PARM_DESC(PORT, "Serial port to use (e.g. /dev/ttyS0) ");
 
 typedef struct file FILE;
 
-#define FAN_COUNT 16
+int FAN_COUNT = 16;
 #define FAN_DEFAULT (unsigned char)'~'
 
 #define DEVICE_NAME "fpgafan0"
 #define CLASS_NAME  "fpgafan"
 
-#define PROTOCOL 2 // Protocol to use
+int PROTOCOL = 3; // Protocol to use
 
 unsigned char *fanbuf;
 EXPORT_SYMBOL(fanbuf);
-static FILE* filp;
+FILE* filp;
 
+/*
 static void sendb(unsigned char b) {
  loff_t pos = 0;
 
@@ -76,6 +78,7 @@ void sendfan(void) {
   }
  }
 }
+*/
 
 const char *CDEV_MSG =	"fpgafan Copyright Charlie Camilleri 2019 \n" \
 			" --> This device is useless, but required for the module to work! <--\n" \
@@ -145,6 +148,7 @@ static int __init fpgafan_init(void){
   fanbuf[i] = FAN_DEFAULT;
  }
 
+ initio();
  sendfan();
 
  major = register_chrdev(0, DEVICE_NAME, &fops);
@@ -160,7 +164,7 @@ static int __init fpgafan_init(void){
   return PTR_ERR(dclass);
  }
 
- fdevice = device_create(dclass, NULL, MKDEV(major, 0), NULL, DEVICE_NAME);
+ fdevice = device_create(dclass, NULL, MKDEV(major, 0), NULL, devname());
  if (IS_ERR(fdevice)){
   class_destroy(dclass);
   unregister_chrdev(major, DEVICE_NAME);
