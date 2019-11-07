@@ -11,4 +11,8 @@ extern void setpin(int id, int val);
 void analogWrite(int pin, unsigned char value);
 void digitalWrite(int pin, int value);
 
+// Variables
+extern unsigned char DEVCHS; // Number of PWM channels
+extern unsigned char DEVCHSG; // Number of GPIOs
+
 #endif

@@ -50,6 +50,11 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *attr, char 
  struct attribute* att = &attr->attr;
  sscanf(att->name, "pwm%d", &id);
 
+ if (id > DEVCHS) {
+  printk("FPGAFAN: Illegal device access (exceeded channel limit)\n");
+  return 0;
+ }
+
  sprintf(buf,"%d\n",fanbuf[id-1]);
  return strlen(buf);
 }
@@ -59,6 +64,11 @@ static ssize_t pwm_store(struct device *dev, struct device_attribute *attr, cons
  int id = 0;
  struct attribute* att = &attr->attr;
  sscanf(att->name, "pwm%d", &id);
+
+ if (id > DEVCHS) {
+  printk("FPGAFAN: Illegal device access (exceeded channel limit)\n");
+  return PAGE_SIZE;
+ }
 
  int tmp;
  sscanf(buf, "%d", &tmp);
@@ -72,6 +82,15 @@ static ssize_t pwm_store(struct device *dev, struct device_attribute *attr, cons
 
 static ssize_t gpio_show(struct device *dev, struct device_attribute *attr, char *buf)
 {
+ int id = 0;
+ struct attribute* att = &attr->attr;
+ sscanf(att->name, "gpio%d", &id);
+
+ if (id >= DEVCHSG) {
+  printk("FPGAFAN: Illegal device access (exceeded channel limit)\n");
+  return 0;
+ }
+
  sprintf(buf,"0\n");
  return strlen(buf);
 }
@@ -80,7 +99,12 @@ static ssize_t gpio_store(struct device *dev, struct device_attribute *attr, con
 {
  int id = 0;
  struct attribute* att = &attr->attr;
- sscanf(att->name, "pwm%d", &id);
+ sscanf(att->name, "gpio%d", &id);
+
+ if (id >= DEVCHSG) {
+  printk("FPGAFAN: Illegal device access (exceeded channel limit)\n");
+  return PAGE_SIZE;
+ }
 
  int tmp;
  sscanf(buf, "%d", &tmp);

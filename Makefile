@@ -1,10 +1,12 @@
 obj-m := fpgafan12.o
 fpgafan12-objs := fpgafan.o sysfs.o io.o
 ccflags-y := --std=gnu99 -Wno-declaration-after-statement -I$(PWD)
+PORT="/dev/ttyV0"
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
 	-/usr/src/linux-headers-$(shell uname -r)/scripts/sign-file sha256 /root/mok/MOK.priv /root/mok/MOK.der fpgafan12.ko
+	-stty -F $(PORT) $(cat ttysettings)
 	-make unload
 	make load
 
@@ -19,7 +21,7 @@ clean:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
 
 load:
-	insmod fpgafan12.ko PORT="/dev/ttyV0"
+	insmod fpgafan12.ko PORT=$(PORT)
 
 unload:
 	rmmod fpgafan12

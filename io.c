@@ -33,6 +33,9 @@ along with FPGAFAN.  If not, see <https://www.gnu.org/licenses/>.
 
 typedef struct file FILE;
 
+unsigned char DEVCHS = 16;
+unsigned char DEVCHSG = 16;
+
 extern FILE* filp;
 extern unsigned char* fanbuf;
 
@@ -111,6 +114,7 @@ void analogWrite(int pin, unsigned char value) {
 
 char DEVNAME[9] = "fpgafan0";
 unsigned char RDONLYP = 0;
+//unsigned char DEVCHS = 16;
 
 unsigned char regs[256];
 
@@ -121,12 +125,22 @@ char* devname(void) {
 // register map
 // 0-15 fans
 // 16-17 GPIO
+// 243 Number of GPIOs (up to 16)
+// 244 Number of fan channels (up to 16)
 // 245 Read only region offset
 // 246 Read only region policy
 // 247-255 Device name
 
 void initio(void) {
  if (PROTOCOL < 3) { return; }
+
+ // Check number of fans
+ DEVCHS = readreg(244);
+ printk(KERN_INFO "FPGAFAN device reported number of channels: %d\n",DEVCHS);
+
+ // Check number of GPIOs
+ DEVCHSG = readreg(243);
+ printk(KERN_INFO "FPGAFAN device reported number of GPIOs: %d\n",DEVCHSG);
 
  // Check RDONLY policy
  RDONLYP = readreg(246);

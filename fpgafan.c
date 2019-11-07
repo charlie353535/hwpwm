@@ -44,7 +44,7 @@ MODULE_PARM_DESC(PORT, "Serial port to use (e.g. /dev/ttyS0) ");
 typedef struct file FILE;
 
 int FAN_COUNT = 16;
-#define FAN_DEFAULT (unsigned char)'~'
+#define FAN_DEFAULT 0xFF
 
 #define DEVICE_NAME "fpgafan0"
 #define CLASS_NAME  "fpgafan"
