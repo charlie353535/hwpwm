@@ -144,8 +144,8 @@ char* devname(void) {
 // 246 Read only region policy
 // 247-255 Device name
 
-void initio(void) {
- if (PROTOCOL < 3) { return; }
+int initio(void) {
+ if (PROTOCOL < 3) { return 0; }
 
  // Check number of fans
  DEVCHS = readreg(244);
@@ -175,6 +175,7 @@ void initio(void) {
  unsigned short _crc = crc16(DEVNAME,8);
  if (crc[0] != (unsigned char)(_crc >> 8) || crc[1] != ((unsigned char)_crc & 0xFFFFFFFF)){
   printk(KERN_ALERT "FPGAFAN device reported invalid checksum! The device may be broken, bricked or just disconnected!\n");
+  return -EIO;
  }
 
  regs[245] = readreg(245);
@@ -184,4 +185,5 @@ void initio(void) {
  for (int i=0; i<16; i++) {
   setpin(i,0);
  }
+ return 0;
 }

@@ -3,7 +3,7 @@
 
 extern void sendb(unsigned char b);
 extern void sendfan(void);
-extern void initio(void);
+int initio(void);
 extern char* devname(void);
 extern void setpin(int id, int val);
 

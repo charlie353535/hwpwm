@@ -129,6 +129,7 @@ static struct class *dclass;
 static int major;
 
 static int __init fpgafan_init(void){
+ int ret=0;
  printk(KERN_INFO "fpgafan Copyright Charlie Camilleri 2019\n");
 
  if (!strcmp(PORT,"NOTTY")) {
@@ -148,7 +149,7 @@ static int __init fpgafan_init(void){
   fanbuf[i] = FAN_DEFAULT;
  }
 
- initio();
+ ret += initio();
  sendfan();
 
  major = register_chrdev(0, DEVICE_NAME, &fops);
@@ -174,7 +175,18 @@ static int __init fpgafan_init(void){
 
  createattrs(fdevice);
 
- return 0;
+ if (ret>0) {
+  delattrs(fdevice);
+
+  device_destroy(dclass, MKDEV(major, 0));
+  class_unregister(dclass);
+  class_destroy(dclass);
+  unregister_chrdev(major, DEVICE_NAME);
+
+  filp_close(filp, NULL);
+ }
+
+ return ret;
 }
 
 static void __exit fpgafan_exit(void){
