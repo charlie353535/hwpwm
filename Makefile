@@ -17,6 +17,9 @@ generic:
 	make -C /lib/modules/5.0.0-32-generic/build M=$(PWD) modules
 	/usr/src/linux-headers-5.0.0-32-generic/scripts/sign-file sha256 /root/mok/MOK.priv /root/mok/MOK.der fpgafan12.ko
 
+socat:
+	socat -d -d PTY,link=/dev/ttyV0,echo=0,raw PTY,link=/dev/ttyV1,echo=0,raw
+
 clean:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
 
