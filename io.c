@@ -31,6 +31,18 @@ along with FPGAFAN.  If not, see <https://www.gnu.org/licenses/>.
 
 //#include <include/sysfs.h>
 
+unsigned short crc16(unsigned char* data_p, unsigned char length){
+    unsigned char x;
+    unsigned short crc = 0xFFFF;
+
+    while (length--){
+        x = crc >> 8 ^ *data_p++;
+        x ^= x>>4;
+        crc = (crc << 8) ^ ((unsigned short)(x << 12)) ^ ((unsigned short)(x <<5)) ^ ((unsigned short)x);
+    }
+    return crc;
+}
+
 typedef struct file FILE;
 
 unsigned char DEVCHS = 16;
@@ -125,6 +137,7 @@ char* devname(void) {
 // register map
 // 0-15 fans
 // 16-17 GPIO
+// 241-242 CRC16 checksum of device name
 // 243 Number of GPIOs (up to 16)
 // 244 Number of fan channels (up to 16)
 // 245 Read only region offset
@@ -142,6 +155,11 @@ void initio(void) {
  DEVCHSG = readreg(243);
  printk(KERN_INFO "FPGAFAN device reported number of GPIOs: %d\n",DEVCHSG);
 
+ unsigned char crc[2];
+ crc[0] = readreg(241);
+ crc[1] = readreg(242);
+ printk(KERN_INFO "FPGAFAN device reported name checksum of: %X%X\n",crc[0],crc[1]);
+
  // Check RDONLY policy
  RDONLYP = readreg(246);
  if (RDONLYP==0) { printk(KERN_INFO "FPGAFAN device reported read only policy: \"ignore\" \n"); }
@@ -153,6 +171,11 @@ void initio(void) {
   DEVNAME[i] = (char)readreg(247+i);
  }
  printk(KERN_INFO "FPGAFAN device reported name: %s\n",DEVNAME);
+
+ unsigned short _crc = crc16(DEVNAME,8);
+ if (crc[0] != (unsigned char)(_crc >> 8) || crc[1] != ((unsigned char)_crc & 0xFFFFFFFF)){
+  printk(KERN_ALERT "FPGAFAN device reported invalid checksum! The device may be broken, bricked or just disconnected!\n");
+ }
 
  regs[245] = readreg(245);
  printk(KERN_INFO "FPGAFAN device reported read only region offset: 0x%X\n",regs[245]);

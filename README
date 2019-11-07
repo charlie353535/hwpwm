@@ -24,6 +24,7 @@ Protocol 3:
      -> Register  0xF6 is the read-only memory policy
      -> Register  0xF5 is the read-only memory offset
      -> Register  0xF4 is the number of PWM channels
-     -> Register  0xF3 is the number if GPIOs
+     -> Register  0xF3 is the number of GPIOs
+     -> Registers 0xF1-F2 contain a CRC16 CRC-CCITT (0xFFFF) checksum of the name
 
 --> YOU MUST SET THE SERIAL PORT BAUDRATE BEFORE USING THIS MODULE
