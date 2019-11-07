@@ -16,5 +16,14 @@ Protocol 2:
    | Fan PWM value | Fan PWM value | Fan PWM value |
    Send each PWM value sequentially, starting from zero and going to 16. Essentially, a big shift register.
 
+Protocol 3:
+   Protocol 3 has the transmission method as Protocol 1, but:
+     -> Setting register FF to 04 returns the value of 04
+     -> Registers 0xF7-FE are the device name (8 bytes)
+     -> Registers 0x10-11 are GPIOs (each pin is a bit)
+     -> Register  0xF6 is the read-only memory policy
+     -> Register  0xF5 is the read-only memory offset
+     -> Register  0xF4 is the number of PWM channels
+     -> Register  0xF3 is the number if GPIOs
 
 --> YOU MUST SET THE SERIAL PORT BAUDRATE BEFORE USING THIS MODULE
