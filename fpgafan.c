@@ -38,7 +38,7 @@ MODULE_DESCRIPTION("Driver for FPGA PWM controller (ttySX) ");
 MODULE_VERSION("12.1");
 
 static char *PORT = "NOTTY";
-module_param(PORT, charp, S_IRUGO);
+module_param(PORT, charp, S_IRUGO | S_IRUSR);
 MODULE_PARM_DESC(PORT, "Serial port to use (e.g. /dev/ttyS0) ");
 
 typedef struct file FILE;
@@ -50,6 +50,8 @@ int FAN_COUNT = 16;
 #define CLASS_NAME  "fpgafan"
 
 int PROTOCOL = 3; // Protocol to use
+module_param(PROTOCOL, int, S_IRUGO | S_IRUSR);
+MODULE_PARM_DESC(PROTOCOL, "Protocol to use (default: 3) ");
 
 unsigned char *fanbuf;
 EXPORT_SYMBOL(fanbuf);
