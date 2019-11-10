@@ -1,0 +1,3 @@
+[submodule "util/protodev"]
+	path = util/protodev
+	url = https://github.com/Cvdcamilleri/hwpwm_protodev.git
