@@ -8,9 +8,5 @@ _*
 *.o
 Module.symvers
 modules.order
-<<<<<<< HEAD
 signing
-.vscode/c_cpp_properties.json
-=======
-signing
->>>>>>> 651da3a3f3346df4d3d1d3a1e97c0e8eef21a132
+.vscode/*
