@@ -57,31 +57,6 @@ unsigned char *fanbuf;
 EXPORT_SYMBOL(fanbuf);
 FILE* filp;
 
-/*
-static void sendb(unsigned char b) {
- loff_t pos = 0;
-
- unsigned char *buf = (unsigned char*)kmalloc(1,GFP_KERNEL);
- buf[0] = b;
-
- kernel_write(filp, buf, 1, &pos);
-
- kfree((void*)buf);
-}
-
-void sendfan(void) {
- for (unsigned char i=0; i<FAN_COUNT; i++) {
-  if (PROTOCOL == 2) {
-   sendb(fanbuf[i]);
-  }
-  if (PROTOCOL == 1) {
-   sendb(i);
-   sendb(fanbuf[i]);
-  }
- }
-}
-*/
-
 const char *CDEV_MSG =	"HWPWM Copyright Charlie Camilleri 2019 \n" \
 			" --> This device is useless, but required for the module to work! <--\n" \
 			"\n" \
