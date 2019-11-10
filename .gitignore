@@ -9,4 +9,8 @@ _*
 Module.symvers
 modules.order
 signing
+<<<<<<< HEAD
 .vscode
+=======
+.vscode/*
+>>>>>>> b2fd8630872e5ffe74a399f84c8365822f620709

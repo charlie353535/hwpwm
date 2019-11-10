@@ -15,6 +15,7 @@ You should have received a copy of the GNU General Public License
 along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#define __NO_VERSION__
 #include <linux/kernel.h>
 #include <linux/init.h>
 #include <linux/module.h>
