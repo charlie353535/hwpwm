@@ -6,17 +6,17 @@ Really though, you could just as easily implement the controller on an arduino o
 
 ## PROTOCOLS
 
-### Protocol 1:
+### Protocol 1
    | 01        | FF            |  02        | FF            |  02        | FF            |   et cetera....   
    | Fan INDEX | Fan PWM Value |  Fan INDEX | Fan PWM Value |  Fan INDEX | Fan PWM Value |   
    Send *ANY* fan index, then the corresponding value. To set fan 3 to 0x80, | 03 | 80 |
 
-### Protocol 2:
+### Protocol 2
    | FF            | FF            | FF            | et cetera....
    | Fan PWM value | Fan PWM value | Fan PWM value |
    Send each PWM value sequentially, starting from zero and going to 16. Essentially, a big shift register.
 
-Protocol 3:
+### Protocol 3
    Protocol 3 has the transmission method as Protocol 1, but:
      -> Setting register FF to XX returns the value of register 0xXX
      -> Registers 0xF7-FE are the device name (8 bytes)
@@ -27,4 +27,4 @@ Protocol 3:
      -> Register  0xF3 is the number of GPIOs
      -> Registers 0xF1-F2 contain a CRC16 CRC-CCITT (0xFFFF) checksum of the name
 
---> YOU MUST SET THE SERIAL PORT BAUDRATE BEFORE USING THIS MODULE
+### YOU MUST SET THE SERIAL PORT BAUDRATE BEFORE USING THIS MODULE
