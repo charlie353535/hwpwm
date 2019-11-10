@@ -6,7 +6,6 @@ PORT="/dev/ttyV0"
 all: compile
 
 test:
-	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
 	-/usr/src/linux-headers-$(shell uname -r)/scripts/sign-file sha256 /root/mok/MOK.priv /root/mok/MOK.der fpgafan12.ko
 	-stty -F $(PORT) $(cat ttysettings)
 	-make unload
