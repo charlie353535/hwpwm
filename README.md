@@ -1,17 +1,17 @@
-==== HWPWM (renamed from FPGAFAN) ====
-Driver for FPGA-based PWM controllers
+# HWPWM (renamed from FPGAFAN)
+### Driver for FPGA-based PWM controllers
 Currently, you can have *one* device on your machine. If you run out of PWM ports, just add more to the FPGA!
 
 Really though, you could just as easily implement the controller on an arduino or the like.
 
-=== PROTOCOLS ===
+## PROTOCOLS
 
-Protocol 1:
+### Protocol 1:
    | 01        | FF            |  02        | FF            |  02        | FF            |   et cetera....   
    | Fan INDEX | Fan PWM Value |  Fan INDEX | Fan PWM Value |  Fan INDEX | Fan PWM Value |   
    Send *ANY* fan index, then the corresponding value. To set fan 3 to 0x80, | 03 | 80 |
 
-Protocol 2:
+### Protocol 2:
    | FF            | FF            | FF            | et cetera....
    | Fan PWM value | Fan PWM value | Fan PWM value |
    Send each PWM value sequentially, starting from zero and going to 16. Essentially, a big shift register.
