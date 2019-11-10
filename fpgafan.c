@@ -1,18 +1,18 @@
 /*
-This file is part of FPGAFAN.
+This file is part of HWPWM.
 
-FPGAFAN is free software: you can redistribute it and/or modify
+HWPWM is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-FPGAFAN is distributed in the hope that it will be useful,
+HWPWM is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with FPGAFAN.  If not, see <https://www.gnu.org/licenses/>.
+along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include <linux/kernel.h>
@@ -34,7 +34,7 @@ along with FPGAFAN.  If not, see <https://www.gnu.org/licenses/>.
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Charlie Camilleri");
-MODULE_DESCRIPTION("Driver for FPGA PWM controller (ttySX) ");
+MODULE_DESCRIPTION("Driver for Hardware PWM controller (ttySX) ");
 MODULE_VERSION("12.1");
 
 static char *PORT = "NOTTY";
@@ -46,8 +46,8 @@ typedef struct file FILE;
 int FAN_COUNT = 16;
 #define FAN_DEFAULT 0xFF
 
-#define DEVICE_NAME "fpgafan0"
-#define CLASS_NAME  "fpgafan"
+#define DEVICE_NAME "hwpwm0"
+#define CLASS_NAME  "hwpwm"
 
 int PROTOCOL = 3; // Protocol to use
 module_param(PROTOCOL, int, S_IRUGO | S_IRUSR);
@@ -82,21 +82,21 @@ void sendfan(void) {
 }
 */
 
-const char *CDEV_MSG =	"fpgafan Copyright Charlie Camilleri 2019 \n" \
+const char *CDEV_MSG =	"HWPWM Copyright Charlie Camilleri 2019 \n" \
 			" --> This device is useless, but required for the module to work! <--\n" \
 			"\n" \
-			"FPGAFAN is free software: you can redistribute it and/or modify\n" \
+			"HWPWM is free software: you can redistribute it and/or modify\n" \
 			"it under the terms of the GNU General Public License as published by\n" \
 			"the Free Software Foundation, either version 3 of the License, or\n" \
 			"(at your option) any later version.\n" \
 			"\n" \
-			"FPGAFAN is distributed in the hope that it will be useful, \n" \
+			"HWPWM is distributed in the hope that it will be useful, \n" \
 			"but WITHOUT ANY WARRANTY; without even the implied warranty of \n" \
 			"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the \n" \
 			"GNU General Public License for more details. \n" \
 			"\n" \
 			"You should have received a copy of the GNU General Public License \n" \
-			"along with FPGAFAN.  If not, see <https://www.gnu.org/licenses/>. \n" \
+			"along with HWPWM.  If not, see <https://www.gnu.org/licenses/>. \n" \
 			"\n";
 
 int ind = 0;
@@ -110,7 +110,7 @@ static ssize_t dev_read(struct file *filep, char *buf, size_t len, loff_t *offse
    err = copy_to_user(buf, CDEV_MSG, strlen(CDEV_MSG));
 
    if (err>0) {
-      printk(KERN_INFO "FPGAFAN: failed to send data to /dev/fpgafan0\n");
+      printk(KERN_INFO "HWPWM: failed to send data to /dev/hwpwm0\n");
       return -EFAULT;
    }
 
@@ -130,12 +130,12 @@ static struct device *fdevice;
 static struct class *dclass;
 static int major;
 
-static int __init fpgafan_init(void){
+static int __init hwpwm_init(void){
  int ret=0;
- printk(KERN_INFO "fpgafan Copyright Charlie Camilleri 2019\n");
+ printk(KERN_INFO "HWPWM Copyright Charlie Camilleri 2019\n");
 
  if (!strcmp(PORT,"NOTTY")) {
-  printk(KERN_ALERT "FPGAFAN: Please specify the PORT parameter\n");
+  printk(KERN_ALERT "HWPWM: Please specify the PORT parameter\n");
   return -EINVAL;
  }
 
@@ -143,7 +143,7 @@ static int __init fpgafan_init(void){
 
  filp = filp_open(PORT, O_RDWR, 0);
  if (IS_ERR(filp)) {
-  printk(KERN_ERR "FPGAFAN: Error opening %s!\n",PORT);
+  printk(KERN_ERR "HWPWM: Error opening %s!\n",PORT);
   return -ENODEV;
  }
 
@@ -156,14 +156,14 @@ static int __init fpgafan_init(void){
 
  major = register_chrdev(0, DEVICE_NAME, &fops);
  if (major<0){
-  printk(KERN_ALERT "FPGAFAN failed to register a major number\n");
+  printk(KERN_ALERT "HWPWM failed to register a major number\n");
   return major;
  }
 
  dclass = class_create(THIS_MODULE, CLASS_NAME);
  if (IS_ERR(dclass)){
   unregister_chrdev(major, DEVICE_NAME);
-  printk(KERN_ALERT "FPGAFAN failed to register device class\n");
+  printk(KERN_ALERT "HWPWM failed to register device class\n");
   return PTR_ERR(dclass);
  }
 
@@ -191,8 +191,8 @@ static int __init fpgafan_init(void){
  return ret;
 }
 
-static void __exit fpgafan_exit(void){
- printk(KERN_INFO "Unloading FPGAFAN\n");
+static void __exit hwpwm_exit(void){
+ printk(KERN_INFO "Unloading HWPWM\n");
 
  delattrs(fdevice);
 
@@ -204,5 +204,5 @@ static void __exit fpgafan_exit(void){
  filp_close(filp, NULL);
 }
 
-module_init(fpgafan_init);
-module_exit(fpgafan_exit);
+module_init(hwpwm_init);
+module_exit(hwpwm_exit);
