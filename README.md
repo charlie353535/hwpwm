@@ -21,7 +21,7 @@ Really though, you could just as easily implement the controller on an arduino o
 - Send each PWM value sequentially, starting from zero and going to 16. Essentially, a big shift register.
 
 ### Protocol 3
-*Protocol 3 has the transmission method as Protocol 1, but:*
+**Protocol 3 has the transmission method as Protocol 1, but:**
 - Setting register FF to XX returns the value of register 0xXX
 - Registers 0xF7-FE are the device name (8 bytes)
 - Registers 0x10-11 are GPIOs (each pin is a bit)
