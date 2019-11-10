@@ -1,4 +1,4 @@
-==== FPGAFAN ====
+==== HWPWM (renamed from FPGAFAN) ====
 Driver for FPGA-based PWM controllers
 Currently, you can have *one* device on your machine. If you run out of PWM ports, just add more to the FPGA!
 
