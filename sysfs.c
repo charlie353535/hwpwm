@@ -1,18 +1,18 @@
 /*
-This file is part of FPGAFAN.
+This file is part of HWPWM.
 
-FPGAFAN is free software: you can redistribute it and/or modify
+HWPWM is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-FPGAFAN is distributed in the hope that it will be useful,
+HWPWM is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with FPGAFAN.  If not, see <https://www.gnu.org/licenses/>.
+along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 
@@ -51,7 +51,7 @@ static ssize_t pwm_show(struct device *dev, struct device_attribute *attr, char 
  sscanf(att->name, "pwm%d", &id);
 
  if (id > DEVCHS) {
-  printk("FPGAFAN: Illegal device access (exceeded channel limit)\n");
+  printk("HWPWM: Illegal device access (exceeded channel limit)\n");
   return 0;
  }
 
@@ -66,7 +66,7 @@ static ssize_t pwm_store(struct device *dev, struct device_attribute *attr, cons
  sscanf(att->name, "pwm%d", &id);
 
  if (id > DEVCHS) {
-  printk("FPGAFAN: Illegal device access (exceeded channel limit)\n");
+  printk("HWPWM: Illegal device access (exceeded channel limit)\n");
   return PAGE_SIZE;
  }
 
@@ -87,7 +87,7 @@ static ssize_t gpio_show(struct device *dev, struct device_attribute *attr, char
  sscanf(att->name, "gpio%d", &id);
 
  if (id >= DEVCHSG) {
-  printk("FPGAFAN: Illegal device access (exceeded channel limit)\n");
+  printk("HWPWM: Illegal device access (exceeded channel limit)\n");
   return 0;
  }
 
@@ -102,7 +102,7 @@ static ssize_t gpio_store(struct device *dev, struct device_attribute *attr, con
  sscanf(att->name, "gpio%d", &id);
 
  if (id >= DEVCHSG) {
-  printk("FPGAFAN: Illegal device access (exceeded channel limit)\n");
+  printk("HWPWM: Illegal device access (exceeded channel limit)\n");
   return PAGE_SIZE;
  }
 
@@ -116,7 +116,7 @@ static ssize_t gpio_store(struct device *dev, struct device_attribute *attr, con
 
 #define FPERM 0644 // sysfs file perm
 
-static const DEVICE_ATTR(pwm1,		FPERM       ,	    pwm_show               , pwm_store);
+static const DEVICE_ATTR(pwm1,   		FPERM       ,	    pwm_show               , pwm_store);
 static const DEVICE_ATTR(pwm2,          FPERM       ,       pwm_show               , pwm_store);
 static const DEVICE_ATTR(pwm3,          FPERM       ,       pwm_show               , pwm_store);
 static const DEVICE_ATTR(pwm4,          FPERM       ,       pwm_show               , pwm_store);
@@ -143,12 +143,12 @@ static const DEVICE_ATTR(gpio6,         FPERM       ,       gpio_show           
 static const DEVICE_ATTR(gpio7,         FPERM       ,       gpio_show               , gpio_store);
 static const DEVICE_ATTR(gpio8,         FPERM       ,       gpio_show               , gpio_store);
 static const DEVICE_ATTR(gpio9,         FPERM       ,       gpio_show               , gpio_store);
-static const DEVICE_ATTR(gpio10,         FPERM       ,       gpio_show               , gpio_store);
-static const DEVICE_ATTR(gpio11,         FPERM       ,       gpio_show               , gpio_store);
-static const DEVICE_ATTR(gpio12,         FPERM       ,       gpio_show               , gpio_store);
-static const DEVICE_ATTR(gpio13,         FPERM       ,       gpio_show               , gpio_store);
-static const DEVICE_ATTR(gpio14,         FPERM       ,       gpio_show               , gpio_store);
-static const DEVICE_ATTR(gpio15,         FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio10,        FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio11,        FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio12,        FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio13,        FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio14,        FPERM       ,       gpio_show               , gpio_store);
+static const DEVICE_ATTR(gpio15,        FPERM       ,       gpio_show               , gpio_store);
 
 
 int createattrs(struct device* pdev) {

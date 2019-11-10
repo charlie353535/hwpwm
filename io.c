@@ -1,18 +1,18 @@
 /*
-This file is part of FPGAFAN.
+This file is part of HWPWM.
 
-FPGAFAN is free software: you can redistribute it and/or modify
+HWPWM is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-FPGAFAN is distributed in the hope that it will be useful,
+HWPWM is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with FPGAFAN.  If not, see <https://www.gnu.org/licenses/>.
+along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include <linux/kernel.h>
@@ -31,11 +31,13 @@ along with FPGAFAN.  If not, see <https://www.gnu.org/licenses/>.
 
 //#include <include/sysfs.h>
 
-unsigned short crc16(unsigned char* data_p, unsigned char length){
+unsigned short crc16(unsigned char* data_p, unsigned char length)
+{
     unsigned char x;
     unsigned short crc = 0xFFFF;
 
-    while (length--){
+    while (length--)
+    {
         x = crc >> 8 ^ *data_p++;
         x ^= x>>4;
         crc = (crc << 8) ^ ((unsigned short)(x << 12)) ^ ((unsigned short)(x <<5)) ^ ((unsigned short)x);
@@ -124,7 +126,7 @@ void analogWrite(int pin, unsigned char value) {
  fanbuf[pin-1] = value;
 }
 
-char DEVNAME[9] = "fpgafan0";
+char DEVNAME[9] = "hwpwm0";
 unsigned char RDONLYP = 0;
 //unsigned char DEVCHS = 16;
 
@@ -149,37 +151,37 @@ int initio(void) {
 
  // Check number of fans
  DEVCHS = readreg(244);
- printk(KERN_INFO "FPGAFAN device reported number of channels: %d\n",DEVCHS);
+ printk(KERN_INFO "HWPWM device reported number of channels: %d\n",DEVCHS);
 
  // Check number of GPIOs
  DEVCHSG = readreg(243);
- printk(KERN_INFO "FPGAFAN device reported number of GPIOs: %d\n",DEVCHSG);
+ printk(KERN_INFO "HWPWM device reported number of GPIOs: %d\n",DEVCHSG);
 
  unsigned char crc[2];
  crc[0] = readreg(241);
  crc[1] = readreg(242);
- printk(KERN_INFO "FPGAFAN device reported name checksum of: %X%X\n",crc[0],crc[1]);
+ printk(KERN_INFO "HWPWM device reported name checksum of: %X%X\n",crc[0],crc[1]);
 
  // Check RDONLY policy
  RDONLYP = readreg(246);
- if (RDONLYP==0) { printk(KERN_INFO "FPGAFAN device reported read only policy: \"ignore\" \n"); }
- if (RDONLYP==1) { printk(KERN_INFO "FPGAFAN device reported read only policy: \"read\" \n"); }
+ if (RDONLYP==0) { printk(KERN_INFO "HWPWM device reported read only policy: \"ignore\" \n"); }
+ if (RDONLYP==1) { printk(KERN_INFO "HWPWM device reported read only policy: \"read\" \n"); }
  regs[246] = RDONLYP;
 
  // Read device name (REGS 247 to 254)
  for (unsigned char i=0; i<8; i++) {
   DEVNAME[i] = (char)readreg(247+i);
  }
- printk(KERN_INFO "FPGAFAN device reported name: %s\n",DEVNAME);
+ printk(KERN_INFO "HWPWM device reported name: %s\n",DEVNAME);
 
  unsigned short _crc = crc16(DEVNAME,8);
  if (crc[0] != (unsigned char)(_crc >> 8) || crc[1] != ((unsigned char)_crc & 0xFFFFFFFF)){
-  printk(KERN_ALERT "FPGAFAN device reported invalid checksum! The device may be broken, bricked or just disconnected!\n");
+  printk(KERN_ALERT "HWPWM device reported invalid checksum! The device may be broken, bricked or just disconnected!\n");
   return -EIO;
  }
 
  regs[245] = readreg(245);
- printk(KERN_INFO "FPGAFAN device reported read only region offset: 0x%X\n",regs[245]);
+ printk(KERN_INFO "HWPWM device reported read only region offset: 0x%X\n",regs[245]);
 
  // Set all GPIOs to LOW
  for (int i=0; i<16; i++) {
