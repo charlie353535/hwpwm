@@ -265,6 +265,11 @@ char* devname(void) {
 int initio(void) {
  if (PROTOCOL < 3) { return 0; }
 
+ if (readreg(247)==0) {
+  printk(KERN_ALERT "HWPWM register 247 reads zero. I don't think that there is a device connected!\n");
+  return -EIO;
+ }
+
  // Check number of fans
  DEVCHS = readreg(244);
  printk(KERN_INFO "HWPWM device reported number of channels: %d\n",DEVCHS);
