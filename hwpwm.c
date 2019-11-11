@@ -31,15 +31,18 @@ along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <include/sysfs.h>
 #include <include/io.h>
+#include <include/global.h>
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Charlie Camilleri");
 MODULE_DESCRIPTION("Driver for Hardware PWM controller (ttySX) ");
 MODULE_VERSION("12.1");
 
+#ifndef USE_RPI_GPIO_PARALLEL
 static char *PORT = "NOTTY";
 module_param(PORT, charp, S_IRUGO | S_IRUSR);
 MODULE_PARM_DESC(PORT, "Serial port to use (e.g. /dev/ttyS0) ");
+#endif
 
 typedef struct file FILE;
 
@@ -109,18 +112,22 @@ static int __init hwpwm_init(void){
  int ret=0;
  printk(KERN_INFO "HWPWM Copyright Charlie Camilleri 2019\n");
 
+ #ifndef USE_RPI_GPIO_PARALLEL
  if (!strcmp(PORT,"NOTTY")) {
   printk(KERN_ALERT "HWPWM: Please specify the PORT parameter\n");
   return -EINVAL;
  }
+ #endif
 
  fanbuf = (unsigned char*)kmalloc(FAN_COUNT, GFP_KERNEL);
 
+ #ifndef USE_RPI_GPIO_PARALLEL
  filp = filp_open(PORT, O_RDWR, 0);
  if (IS_ERR(filp)) {
   printk(KERN_ERR "HWPWM: Error opening %s!\n",PORT);
   return -ENODEV;
  }
+ #endif
 
  for (int i=0; i<FAN_COUNT; i++) {
   fanbuf[i] = FAN_DEFAULT;
@@ -160,7 +167,9 @@ static int __init hwpwm_init(void){
   class_destroy(dclass);
   unregister_chrdev(major, DEVICE_NAME);
 
+  #ifndef USE_RPI_GPIO_PARALLEL
   filp_close(filp, NULL);
+  #endif
  }
 
  return ret;
@@ -178,7 +187,9 @@ static void __exit hwpwm_exit(void){
  class_destroy(dclass);
  unregister_chrdev(major, DEVICE_NAME);
 
+ #ifndef USE_RPI_GPIO_PARALLEL
  filp_close(filp, NULL);
+ #endif
 }
 
 module_init(hwpwm_init);

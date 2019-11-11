@@ -32,8 +32,7 @@ along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 #include <linux/sysfs.h>
 
 #include <include/io.h>
-//#include "../GPL3.h"
-
+#include <include/global.h>
 typedef struct file FILE;
 
 // extern funcs

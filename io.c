@@ -31,6 +31,8 @@ along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 #include <linux/of_device.h>
 #include <linux/sysfs.h>
 
+#include <include/global.h>
+
 #ifdef USE_RPI_GPIO_PARALLEL
 #define recvb p_recvb
 #define sendb p_sendb
