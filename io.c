@@ -303,10 +303,14 @@ int initio(void) {
  for (int i=0; i<16; i++) {
   setpin(i,0);
  }
+ #ifdef USE_RPI_GPIO_PARALLEL
  p_init();
+ #endif
  return 0;
 }
 
 void exitio(void) {
-    p_init();
+    #ifdef USE_RPI_GPIO_PARALLEL
+    p_exit();
+    #endif
 }
