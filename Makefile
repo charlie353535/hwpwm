@@ -25,7 +25,7 @@ clean:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
 
 load:
-	insmod fpgafan12.ko PORT=$(PORT)
+	insmod hwpwm12.ko PORT=$(PORT)
 
 unload:
-	rmmod fpgafan12
+	rmmod hwpwm12
