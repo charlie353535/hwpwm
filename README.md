@@ -34,3 +34,4 @@ Really though, you could just as easily implement the controller on an arduino o
 - Registers 0xF1-F2 contain a CRC16 CRC-CCITT (0xFFFF) checksum of the name
 
 ### YOU MUST SET THE SERIAL PORT BAUDRATE BEFORE USING THIS MODULE
+# This is a very minimal documentation. The full documentation comes later.
