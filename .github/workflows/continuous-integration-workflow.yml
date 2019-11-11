@@ -11,6 +11,6 @@ jobs:
     steps:
       
       - name: Compile
-        run: make
+        run: ls
       
 
