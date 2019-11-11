@@ -35,7 +35,7 @@ along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Charlie Camilleri");
 MODULE_DESCRIPTION("Driver for Hardware PWM controller (ttySX) ");
-MODULE_VERSION("12.1");
+MODULE_VERSION("12.3.6");
 
 static char *PORT = "NOTTY";
 module_param(PORT, charp, S_IRUGO | S_IRUSR);

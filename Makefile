@@ -1,5 +1,5 @@
-obj-m := fpgafan12.o
-fpgafan12-objs := fpgafan.o sysfs.o io.o
+obj-m := hwpwm12.o
+hwpwm12-objs := hwpwm.o sysfs.o io.o
 ccflags-y := --std=gnu99 -Wno-declaration-after-statement -I$(PWD)
 PORT="/dev/ttyV0"
 
