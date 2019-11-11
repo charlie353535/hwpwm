@@ -19,6 +19,7 @@ along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 #define __NO_VERSION__
 #include <linux/kernel.h>
 #include <linux/init.h>
+#include <linux/gpio.h>
 #include <linux/module.h>
 //#include <linux/syscalls.h>
 #include <linux/fcntl.h>
