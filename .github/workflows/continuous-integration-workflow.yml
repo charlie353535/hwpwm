@@ -1,0 +1,16 @@
+name: Check Compile
+# This workflow is triggered on pushes to the repository.
+on: [push]
+
+jobs:
+  build:
+    # Job name is Greeting
+    name: Compile
+    # This job runs on Linux
+    runs-on: ubuntu-latest
+    steps:
+      
+      - name: Compile
+        run: make
+      
+
