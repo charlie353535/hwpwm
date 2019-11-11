@@ -16,6 +16,7 @@ along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #define __NO_VERSION__
+#include <linux/delay.h>
 #include <linux/kernel.h>
 #include <linux/init.h>
 #include <linux/module.h>
@@ -29,6 +30,14 @@ along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 #include <linux/buffer_head.h>
 #include <linux/of_device.h>
 #include <linux/sysfs.h>
+
+#ifdef USE_RPI_GPIO_PARALLEL
+#define recvb p_recvb
+#define sendb p_sendb
+#else
+#define recvb c_recvb
+#define sendb c_sendb
+#endif
 
 //#include <include/sysfs.h>
 
@@ -57,8 +66,9 @@ extern unsigned char* fanbuf;
 extern int PROTOCOL;
 extern int FAN_COUNT;
 
-#define REQ_CLK // Input (requests from gpio) clock
-#define OUT_CLK // Output (from gpio) clock
+
+#define REQ_CLK 24 // Input (requests from gpio) clock
+#define OUT_CLK 25 // Output (from gpio) clock
 
 #define D0 2    // (maybe 0) Data lines x8
 #define D1 3    // maybe 1 (blame raspberry pi foundation please)
@@ -69,23 +79,98 @@ extern int FAN_COUNT;
 #define D6 18
 #define D7 23
 
-void p_sendb(unsigned char b){
+#define P_FREQ 2 // Parallell port frequency in Hz
 
+void p_sendb(unsigned char b){
+    unsigned char bits[8];
+    for (int i=0; i<8; i++) {
+        bits[i] = ((1 << (i % 8)) & (b)) >> (i % 8);
+    }  
+    
+    gpio_direction_output(D0, bits[0]);
+    gpio_direction_output(D1, bits[1]);
+    gpio_direction_output(D2, bits[2]);
+    gpio_direction_output(D3, bits[3]);
+    gpio_direction_output(D4, bits[4]);
+    gpio_direction_output(D5, bits[5]);
+    gpio_direction_output(D6, bits[6]);
+    gpio_direction_output(D7, bits[7]);
+
+    gpio_direction_output(OUT_CLK, 1);
+
+    mdelay((int)(1000/P_FREQ));
+
+    gpio_direction_output(OUT_CLK, 0);
+
+    gpio_direction_output(D0, 0);
+    gpio_direction_output(D1, 0);
+    gpio_direction_output(D2, 0);
+    gpio_direction_output(D3, 0);
+    gpio_direction_output(D4, 0);
+    gpio_direction_output(D5, 0);
+    gpio_direction_output(D6, 0);
+    gpio_direction_output(D7, 0);
 }
 
 unsigned char p_recvb(void) {
+    gpio_direction_output(REQ_CLK, 1);
+
+    gpio_direction_input(D0);
+    gpio_direction_input(D1);
+    gpio_direction_input(D2);
+    gpio_direction_input(D3);
+    gpio_direction_input(D4);
+    gpio_direction_input(D5);
+    gpio_direction_input(D6);
+    gpio_direction_input(D7);    
+
+    unsigned char ret = 0;
+    ret += gpio_get_value(D0) * ( 1 << 0 );
+    ret += gpio_get_value(D1) * ( 1 << 1 );
+    ret += gpio_get_value(D2) * ( 1 << 2 );
+    ret += gpio_get_value(D3) * ( 1 << 3 );
+    ret += gpio_get_value(D4) * ( 1 << 4 );
+    ret += gpio_get_value(D5) * ( 1 << 5 );
+    ret += gpio_get_value(D6) * ( 1 << 6 );
+    ret += gpio_get_value(D7) * ( 1 << 7 );
+
+    msleep((int)(1000/P_FREQ));
+
+    gpio_direction_output(REQ_CLK, 1);
+
+    return ret;
 
 }
 
 void p_init(void) {
+    gpio_request(REQ_CLK, "REQ_CLK");
+    gpio_request(OUT_CLK, "OUT_CLK");
 
+    gpio_request(D0, "D0");
+    gpio_request(D1, "D1");
+    gpio_request(D2, "D2");
+    gpio_request(D3, "D3");
+    gpio_request(D4, "D4");
+    gpio_request(D5, "D5");
+    gpio_request(D6, "D6");
+    gpio_request(D7, "D7");    
 }
 
 void p_exit(void) {
+    gpio_free(REQ_CLK);
+    gpio_free(OUT_CLK);
 
+    gpio_free(D0);
+    gpio_free(D1);
+    gpio_free(D2);
+    gpio_free(D3);
+    gpio_free(D4);
+    gpio_free(D5);
+    gpio_free(D6);
+    gpio_free(D7);
 }
 
-void sendb(unsigned char b) {
+void c_sendb(unsigned char b) {
  loff_t pos = 0;
 
  unsigned char *buf = (unsigned char*)kmalloc(1,GFP_KERNEL);
@@ -96,7 +181,7 @@ void sendb(unsigned char b) {
  kfree((void*)buf);
 }
 
-unsigned char recvb(void) {
+unsigned char c_recvb(void) {
  loff_t pos = 0;
  unsigned char b;
  kernel_read(filp, &b, 1, &pos);
