@@ -1,6 +1,11 @@
 name: build
 # This workflow is triggered on pushes to the repository.
-on: [push]
+on: [push, pull_request]
+runs-on: ${{ matrix.os }}
+
+strategy:
+  matrix:
+    os: [ubuntu-16.04, ubuntu-18.04]
 
 jobs:
   build:
