@@ -20,7 +20,6 @@ along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 #include <linux/init.h>
 #include <linux/module.h>
 #include <linux/gpio.h>
-//#include <linux/syscalls.h>
 #include <linux/fcntl.h>
 #include <linux/file.h>
 #include <linux/slab.h>
@@ -57,6 +56,34 @@ extern unsigned char* fanbuf;
 
 extern int PROTOCOL;
 extern int FAN_COUNT;
+
+#define REQ_CLK // Input (requests from gpio) clock
+#define OUT_CLK // Output (from gpio) clock
+
+#define D0 2    // (maybe 0) Data lines x8
+#define D1 3    // maybe 1 (blame raspberry pi foundation please)
+#define D2 4
+#define D3 17
+#define D4 27   // maybe 21
+#define D5 22
+#define D6 18
+#define D7 23
+
+void p_sendb(unsigned char b){
+
+}
+
+unsigned char p_recvb(void) {
+
+}
+
+void p_init(void) {
+
+}
+
+void p_exit(void) {
+
+}
 
 void sendb(unsigned char b) {
  loff_t pos = 0;
@@ -189,5 +216,10 @@ int initio(void) {
  for (int i=0; i<16; i++) {
   setpin(i,0);
  }
+ p_init();
  return 0;
+}
+
+void exitio(void) {
+    p_init();
 }

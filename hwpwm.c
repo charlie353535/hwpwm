@@ -18,7 +18,7 @@ along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 #include <linux/kernel.h>
 #include <linux/init.h>
 #include <linux/module.h>
-//#include <linux/syscalls.h>
+#include <linux/gpio.h>
 #include <linux/fcntl.h>
 #include <linux/file.h>
 #include <linux/slab.h>
@@ -35,7 +35,7 @@ along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Charlie Camilleri");
 MODULE_DESCRIPTION("Driver for Hardware PWM controller (ttySX) ");
-MODULE_VERSION("12.3.6");
+MODULE_VERSION("12.1");
 
 static char *PORT = "NOTTY";
 module_param(PORT, charp, S_IRUGO | S_IRUSR);
@@ -168,6 +168,8 @@ static int __init hwpwm_init(void){
 
 static void __exit hwpwm_exit(void){
  printk(KERN_INFO "Unloading HWPWM\n");
+
+ exitio();
 
  delattrs(fdevice);
 

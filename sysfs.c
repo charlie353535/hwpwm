@@ -21,7 +21,6 @@ along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 #include <linux/init.h>
 #include <linux/gpio.h>
 #include <linux/module.h>
-//#include <linux/syscalls.h>
 #include <linux/fcntl.h>
 #include <linux/file.h>
 #include <linux/slab.h>
