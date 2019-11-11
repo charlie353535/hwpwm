@@ -1,6 +1,6 @@
 # HWPWM (renamed from FPGAFAN)
 ### Driver for FPGA-based PWM controllers
-![](https://github.com/cvdcamilleri/hwpwm/workflows/Module%20Compiles/badge.svg)
+![](https://github.com/cvdcamilleri/hwpwm/workflows/build/badge.svg)
 
 Currently, you can have *one* device on your machine. If you run out of PWM ports, just add more to the FPGA!
 
