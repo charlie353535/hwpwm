@@ -6,6 +6,10 @@ Currently, you can have *one* device on your machine. If you run out of PWM port
 
 Really though, you could just as easily implement the controller on an arduino or the like.
 
+Recommended version (see releases): **12.3.5** <br>
+Latest Stable version:              **12.3.6** <br>
+Latest Experimental version:        **12.5.0-pre1**
+
 ## PROTOCOLS
 
 ### Protocol 1
