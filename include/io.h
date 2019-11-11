@@ -4,6 +4,7 @@
 extern void sendb(unsigned char b);
 extern void sendfan(void);
 int initio(void);
+void exitio(void);
 extern char* devname(void);
 extern void setpin(int id, int val);
 
