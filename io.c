@@ -30,6 +30,8 @@ along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 #include <linux/buffer_head.h>
 #include <linux/of_device.h>
 #include <linux/sysfs.h>
+#include <linux/path.h>
+#include <linux/namei.h>
 
 #include <include/global.h>
 
@@ -39,6 +41,7 @@ along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 #else
 #define recvb c_recvb
 #define sendb c_sendb
+extern char* PORT;
 #endif
 
 //#include <include/sysfs.h>
@@ -67,6 +70,17 @@ extern unsigned char* fanbuf;
 
 extern int PROTOCOL;
 extern int FAN_COUNT;
+
+// not implemented yet, in progress
+int c_checksz(void) {
+/* struct path p;
+ struct kstat ks;
+ kern_path(PORT, 0, &p);
+ vfs_getattr(&p, &ks);
+ printk(KERN_INFO "########################## size: %lld\n", ks.size);
+ return ks.size;*/
+ return 0;
+}
 
 
 #define REQ_CLK 24 // Input (requests from gpio) clock
@@ -178,6 +192,13 @@ void c_sendb(unsigned char b) {
  unsigned char *buf = (unsigned char*)kmalloc(1,GFP_KERNEL);
  buf[0] = b;
 
+ #ifdef IOWAIT
+ #warning "IOWAIT is rather slow! only use it if it is REALLY required!"
+ for (unsigned long long i=0; i<IOWAIT; i++) {
+  __asm__("nop");
+ }
+ #endif
+
  kernel_write(filp, buf, 1, &pos);
 
  kfree((void*)buf);
@@ -264,6 +285,8 @@ char* devname(void) {
 
 int initio(void) {
  if (PROTOCOL < 3) { return 0; }
+
+ c_checksz();
 
  if (readreg(247)==0) {
   printk(KERN_ALERT "HWPWM register 247 reads zero. I don't think that there is a device connected!\n");

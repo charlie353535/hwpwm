@@ -39,7 +39,7 @@ MODULE_DESCRIPTION("Driver for Hardware PWM controller (ttySX) ");
 MODULE_VERSION("v12.5.0-pre1");
 
 #ifndef USE_RPI_GPIO_PARALLEL
-static char *PORT = "NOTTY";
+char *PORT = "NOTTY";
 module_param(PORT, charp, S_IRUGO | S_IRUSR);
 MODULE_PARM_DESC(PORT, "Serial port to use (e.g. /dev/ttyS0) ");
 #endif
