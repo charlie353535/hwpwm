@@ -1,15 +1,13 @@
 obj-m := hwpwm12.o
 hwpwm12-objs := hwpwm.o sysfs.o io.o
 ccflags-y := --std=gnu99 -Wno-declaration-after-statement -I$(PWD)
-PORT="/dev/ttyACM1"
+PORT="/dev/ttyV0"
 
 all: compile
 
 test:
-	make compile
 	-/usr/src/linux-headers-$(shell uname -r)/scripts/sign-file sha256 /root/mok/MOK.priv /root/mok/MOK.der fpgafan12.ko
 	-stty -F $(PORT) $(cat ttysettings)
-	-stty -F /dev/ttyACM1 115200
 	-make unload
 	make load
 

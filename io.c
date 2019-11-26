@@ -36,11 +36,9 @@ along with HWPWM.  If not, see <https://www.gnu.org/licenses/>.
 #ifdef USE_RPI_GPIO_PARALLEL
 #define recvb p_recvb
 #define sendb p_sendb
-#define sendw p_sendw
 #else
 #define recvb c_recvb
 #define sendb c_sendb
-#define sendw c_sendw
 #endif
 
 //#include <include/sysfs.h>
@@ -116,11 +114,6 @@ void p_sendb(unsigned char b){
     gpio_direction_output(D7, 0);
 }
 
-void p_sendw(unsigned short w) {
-    p_sendb(((unsigned char*)&w)[0]);
-    p_sendb(((unsigned char*)&w)[1]);
-}
-
 unsigned char p_recvb(void) {
     gpio_direction_output(REQ_CLK, 1);
 
@@ -182,20 +175,12 @@ void p_exit(void) {
 void c_sendb(unsigned char b) {
  loff_t pos = 0;
 
- kernel_write(filp, &b, 1, &pos);
+ unsigned char *buf = (unsigned char*)kmalloc(1,GFP_KERNEL);
+ buf[0] = b;
 
-// for (int i=0;i<0xFFFF;i++) {
-//  for (int i=0;i<0xFFF;i++) {
-//   __asm__("nop");
-//  }
-// }
+ kernel_write(filp, buf, 1, &pos);
 
-}
-
-void c_sendw(unsigned short w) {
- loff_t pos = 0;
-
- kernel_write(filp,&w,1,&pos);
+ kfree((void*)buf);
 }
 
 unsigned char c_recvb(void) {
@@ -211,8 +196,8 @@ void sendfan(void) {
    sendb(fanbuf[i]);
   }
   if (PROTOCOL == 1 || PROTOCOL == 3) {
-   unsigned char d[2] = {i, fanbuf[i]};
-   sendw(((unsigned short*)d)[0]);
+   sendb(i);
+   sendb(fanbuf[i]);
   }
  }
 }
@@ -280,10 +265,10 @@ char* devname(void) {
 int initio(void) {
  if (PROTOCOL < 3) { return 0; }
 
- //if (readreg(247)==0) {
- // printk(KERN_ALERT "HWPWM register 247 reads zero. I don't think that there is a device connected!\n");
- // return -EIO;
- //}
+ if (readreg(247)==0) {
+  printk(KERN_ALERT "HWPWM register 247 reads zero. I don't think that there is a device connected!\n");
+  return -EIO;
+ }
 
  // Check number of fans
  DEVCHS = readreg(244);
@@ -312,7 +297,7 @@ int initio(void) {
 
  unsigned short _crc = crc16(DEVNAME,8);
  if (crc[0] != (unsigned char)(_crc >> 8) || crc[1] != ((unsigned char)_crc & 0xFFFFFFFF)){
-  printk(KERN_ALERT "HWPWM device reported invalid checksum! The device may be broken, bricked or just disconnected! (EXPECTED 0x%X)\n",_crc);
+  printk(KERN_ALERT "HWPWM device reported invalid checksum! The device may be broken, bricked or just disconnected!\n");
   return -EIO;
  }
 
