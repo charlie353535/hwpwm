@@ -1,7 +1,7 @@
 obj-m := hwpwm12.o
 hwpwm12-objs := hwpwm.o sysfs.o io.o
 ccflags-y := --std=gnu99 -Wno-declaration-after-statement -I$(PWD)
-PORT="/dev/ttyV0"
+PORT="/dev/ttyACM1"
 
 all: compile
 
@@ -27,7 +27,7 @@ clean:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
 
 load:
-	sudo insmod hwpwm12.ko PORT=$(PORT)
+	insmod hwpwm12.ko PORT=$(PORT)
 
 unload:
-	sudo rmmod hwpwm12
+	rmmod hwpwm12

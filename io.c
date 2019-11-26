@@ -219,13 +219,11 @@ void sendfan(void) {
 //EXPORT_SYMBOL(sendfan);
 
 void setreg(unsigned char reg, unsigned char val) {
- unsigned char d[2] = {reg, val};
- sendw(((unsigned short*)d)[0]);
+ sendb(reg); sendb(val);
 }
 
 unsigned char readreg(unsigned char reg) {
- unsigned char d[2] = {0xFF, reg};
- sendw(((unsigned short*)d)[0]);
+ sendb(0xFF); sendb(reg);
  return recvb();
 }
 
@@ -238,13 +236,13 @@ void setpin(int id, int val) {
  if (id>7) {
   if (val>0) { GPIO[1] |=  (1UL << (id-8) ); }
   if (val==0){ GPIO[1] &= ~(1UL << (id-8) ); }
-  setreg(17, GPIO[1]);
  }
  else {
   if (val>0) { GPIO[0] |=  (1UL << (id) ); }
   if (val==0){ GPIO[0] &= ~(1UL << (id) ); }
-  setreg(16, GPIO[0]);
  }
+ setreg(16,GPIO[0]);
+ setreg(17,GPIO[1]);
  //printk(KERN_INFO "GPIO0 = 0x%X, GPIO1 = 0x%X\n",GPIO[0],GPIO[1]);
 }
 
